@@ -1,0 +1,123 @@
+from tkinter import *
+from PIL import Image, ImageTk
+from random import randint
+ 
+window = Tk()
+window.title("Rock-Paper-Scissors")
+window.configure(background="lightblue")
+
+# Load and resize the images
+def load_and_resize_image(image_path, width, height):
+    original_image = Image.open(image_path)
+    resized_image = original_image.resize((width, height))   # Image.ANTIALIAS)
+    return ImageTk.PhotoImage(resized_image)
+
+image_width = 200  # Set your desired image width
+image_height = 200  # Set your desired image height
+
+image_Rock1 = load_and_resize_image("R2.png", image_width, image_height)
+image_Paper1 = load_and_resize_image("P.png", image_width, image_height)
+image_Scissors1 = load_and_resize_image("S2.png", image_width, image_height)
+image_Rock2 = load_and_resize_image("R.png", image_width, image_height)
+image_Paper2 = load_and_resize_image("P2.png", image_width, image_height)
+image_Scissors2 = load_and_resize_image("S.png", image_width, image_height)
+
+# Labels that display the images
+label_player = Label(window, image=image_Rock1)
+label_computer = Label(window, image=image_Rock2)
+label_computer.grid(row=1, column=0)
+label_player.grid(row=1, column=4)
+
+# ... Rest of your code ...
+#score labels
+computer_score = Label(window, text = 0 , font = ('Calisto MT', 50, "bold"), fg= "white", bg = "lightblue")
+player_score = Label(window, text = 0 , font = ('Calisto MT', 50, "bold"), fg= "white", bg = "lightblue")
+computer_score.grid(row = 1 , column= 1)
+player_score.grid(row = 1 , column = 3 )
+
+# varibles to store the score or is it an label??
+player_indicator = Label(window, font = ("Calisto MT", 40, "bold"), text= "You",bg = "lightblue", fg= "white")
+computer_indicator = Label(window, font = ("Calisto MT", 40, "bold"), text= "PC",bg = "lightblue", fg= "white")
+computer_indicator.grid(row = 0, column= 1)
+player_indicator.grid(row= 0, column= 3)
+
+#functions for the score updates 
+def msg_update(a):
+    final_message['text'] = a 
+
+def Compter_Update():
+    final = int(computer_score['text'])
+    final += 1
+    computer_score["text"] = str(final)
+
+def Player_Update():
+    final = int(player_score['text'])
+    final += 1
+    player_score["text"] = str(final)
+
+# find the winner
+def winner_check(p, c):
+    if p == c:
+        msg_update("Tie")
+    elif p == "rock":
+        if c == "paper":
+            msg_update("PC Wins!")
+            Compter_Update()
+        else:
+            msg_update("YOU WIN!")
+            Player_Update()
+    elif p == "paper":
+        if c == "scissor":
+            msg_update("PC Wins")
+            Compter_Update()
+        else:
+            msg_update("YOU WIN!")
+            Player_Update()
+
+    elif p == "scissor":
+        if c == "rock":
+            msg_update("PC Wins")
+            Compter_Update()
+        else:
+            msg_update("YOU WIN!")
+            Player_Update()
+    else:
+        pass
+
+
+#update the pictures with selections
+to_select = ["rock", "paper", "scissor"]
+
+def choice_update(a):
+    choice_computer = to_select[randint(0,2)]
+    if choice_computer == "rock":
+        label_computer.configure(image = image_Rock2)
+    elif choice_computer == "paper":
+         label_computer.configure(image = image_Paper2)
+    else:
+         label_computer.configure(image = image_Scissors2)
+
+    # for the user
+    if a == "rock":
+        label_player.configure(image = image_Rock1)
+
+    elif a == "paper":
+        label_player.configure(image = image_Paper1)
+    else:
+        label_player.configure(image = image_Scissors1)
+
+    winner_check(a, choice_computer)
+
+
+
+#outcome message 
+final_message = Label(window, font = ("Calisto MT", 22, "bold") , bg = "lightblue", fg= "white" )
+final_message.grid(row = 3, column= 2)
+#add the buttons 
+btnRock = Button(window, width= 10, height= 3, text = "ROCK", bg= "white", font = ("Calisto MT", 18, "bold"), command= lambda: choice_update("rock")).grid(row =2 , column= 1)
+btnPaper = Button(window, width= 10, height= 3, text = "PAPER" , bg= "white" , font = ("Calisto MT", 18, "bold"),command= lambda: choice_update("paper")).grid(row =2 , column= 2)
+btnScissors = Button(window, width= 10, height= 3, text = "SCISSORS" , bg= "white", font = ("Calisto MT", 18, "bold"),command= lambda: choice_update("scissor")).grid(row =2 , column= 3)
+
+
+
+window.mainloop()
